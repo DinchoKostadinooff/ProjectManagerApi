@@ -36,26 +36,34 @@ module.exports.updateProfile = function(req, res) {
             }
 
 
-          user.name = req.body.name || user.name;
-          user.email = req.body.email || user.email;
-          user.position = req.body.position || user.position;
+
           if((user.validPassword(req.body.oldPassword))===true){
-            user.setPassword(req.body.newPassword || req.body.oldPassword)
+              user.setPassword(req.body.newPassword || req.body.oldPassword)
+              user.name = req.body.name || user.name;
+              user.email = req.body.email || user.email;
+              user.position = req.body.position || user.position;
+
+              user.save(function(err) {
+                  if (err){
+                      res.status(400).json(err);
+                  }else{
+                      var token;
+                      token = user.generateJwt();
+                      res.status(200);
+                      res.json({
+                          "token" : token
+                      });
+                  }
+
+              });
 
           }else{
-            //res.status(400).json({error:'password doesnt match'});
+            res.status(400).json({error:'password doesnt match'});
           }
 
 
 
-            user.save(function(err) {
-              if (err){
-                res.status(400).json(err);
-              }else{
-                res.status(200).json( user );
-              }
 
-            });
 
                   });
   }
