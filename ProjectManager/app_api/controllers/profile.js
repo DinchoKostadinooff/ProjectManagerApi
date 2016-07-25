@@ -138,58 +138,31 @@ module.exports.updateProfile = function(req, res) {
             }
 
 
-            User.findOne({ name:req.body.name}, function (err, name){
-                if(err){
-                    sendJSONresponse(res, 400, {
-                        "message": err
-                    });
-                }
+            if((user.validPassword(req.body.oldPassword))===true){
+                user.setPassword(req.body.newPassword || req.body.oldPassword)
+                user.name = req.body.name || user.name;
+                user.email = req.body.email || user.email;
+                user.position = req.body.position || user.position;
 
-                if(name){
-                    sendJSONresponse(res, 400, {
-                        "message": "name exist"
-                    });
-                }else{
-                    User.findOne({email: req.body.email }, function (err, email) {
-                        if(err){
-                            sendJSONresponse(res, 400, {
-                                "message": err
-                            });
-                        }
+                user.save(function(err) {
+                    if (err){
+                        res.status(400).json(err);
+                    }else{
+                        var token;
+                        token = user.generateJwt();
+                        res.status(200);
+                        res.json({
+                            "token" : token
+                        });
+                    }
 
-                        if(email){
-                            sendJSONresponse(res, 400, {
-                                "message": "email exist"
-                            });
-                        }else{
-                            if((user.validPassword(req.body.oldPassword))===true){
-                                user.setPassword(req.body.newPassword || req.body.oldPassword)
-                                user.name = req.body.name || user.name;
-                                user.email = req.body.email || user.email;
-                                user.position = req.body.position || user.position;
+                });
 
-                                user.save(function(err) {
-                                    if (err){
-                                        res.status(400).json(err);
-                                    }else{
-                                        var token;
-                                        token = user.generateJwt();
-                                        res.status(200);
-                                        res.json({
-                                            "token" : token
-                                        });
-                                    }
+            }else{
+                res.status(400).json({error:'password doesnt match'});
+            }
 
-                                });
 
-                            }else{
-                                res.status(400).json({error:'password doesnt match'});
-                            }
-                        }
-                    });
-
-                }
-            });
 
         });
   }
