@@ -30,3 +30,4 @@ gracefulShutdown = function(msg, callback) {
 
 
 require('./users');
+require('./projects');

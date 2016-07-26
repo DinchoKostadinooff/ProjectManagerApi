@@ -16,7 +16,12 @@ require('./app_api/config/passport');
 var routesApi = require('./app_api/routes/index');
 
 var app = express();
-
+app.all("/api/*", function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With");
+    res.header("Access-Control-Allow-Methods", "GET, PUT, POST,Delete");
+    return next();
+});
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -80,12 +85,7 @@ app.use(function(err, req, res, next) {
     });
 });
 
-app.all("/api/*", function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With");
-    res.header("Access-Control-Allow-Methods", "GET, PUT, POST,Delete");
-    return next();
-});
+
 module.exports = app;
 app.listen(7777, function () {
     console.log(' app listening on port 7777!');

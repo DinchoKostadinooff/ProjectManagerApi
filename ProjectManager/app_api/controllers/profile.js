@@ -168,3 +168,87 @@ module.exports.updateProfile = function(req, res) {
   }
 
 };
+
+module.exports.getFrontEnd = function(req, res) {
+
+    if (!req.payload._id) {
+        res.status(401).json({
+            "message" : "UnauthorizedError: private profile"
+        });
+    } else {
+        User
+            .findById(req.payload._id)
+            .exec(function(err, user) {
+
+                if (err){
+                    res.status(400).json(err);
+                }
+
+                User.find({position:'Front-End'}, 'id name position', function (err, users) {
+
+                    if (err){
+                        res.status(400).json(err);
+                    }
+
+                    res.json(users)
+                });
+            });
+    }
+
+};
+
+module.exports.getBackEnd = function(req, res) {
+
+    if (!req.payload._id) {
+        res.status(401).json({
+            "message" : "UnauthorizedError: private profile"
+        });
+    } else {
+        User
+            .findById(req.payload._id)
+            .exec(function(err, user) {
+
+                if (err){
+                    res.status(400).json(err);
+                }
+
+                User.find({position:'Back-End'}, 'id name position', function (err, users) {
+
+                    if (err){
+                        res.status(400).json(err);
+                    }
+
+                    res.json(users)
+                });
+            });
+    }
+
+};
+
+module.exports.getFullstack = function(req, res) {
+
+    if (!req.payload._id) {
+        res.status(401).json({
+            "message" : "UnauthorizedError: private profile"
+        });
+    } else {
+        User
+            .findById(req.payload._id)
+            .exec(function(err, user) {
+
+                if (err){
+                    res.status(400).json(err);
+                }
+
+                User.find({position:'Full-Stack'}, 'id name position', function (err, users) {
+
+                    if (err){
+                        res.status(400).json(err);
+                    }
+
+                    res.json(users)
+                });
+            });
+    }
+
+};
