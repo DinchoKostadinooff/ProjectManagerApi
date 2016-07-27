@@ -23,5 +23,7 @@ router.post('/login', ctrlAuth.login);
 
 //projects
 router.post('/project', auth, ctrlProject.createProject);
+router.put('/project/:id', auth, ctrlProject.updateProject);
+router.get('/myProject', auth, ctrlProject.getMyProject);
 
 module.exports = router;

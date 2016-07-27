@@ -21,9 +21,9 @@ var projectSchema = new mongoose.Schema({
         type:Boolean,
         default: true
     },
-    adminUsers:[String]
+    adminUsers:[]
     ,
-    standardUsers:[String]
+    standardUsers:[]
 });
 
 
