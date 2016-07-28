@@ -25,6 +25,8 @@ router.post('/login', ctrlAuth.login);
 router.post('/project', auth, ctrlProject.createProject);
 router.put('/project/:id', auth, ctrlProject.updateProject);
 router.get('/myProjects', auth, ctrlProject.getMyProject);
+router.get('/admin/projects', auth, ctrlProject.getAdminProjects);
+router.get('/developer/projects', auth, ctrlProject.getDeveloperProjects);
 router.delete('/myProject/:id', auth, ctrlProject.deleteMyProject);
 
 module.exports = router;

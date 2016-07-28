@@ -230,6 +230,57 @@ module.exports.getMyProject = function(req, res) {
 
 };
 
+module.exports.getAdminProjects = function(req, res) {
+
+    if (!req.payload._id) {
+        res.status(401).json({
+            "message" : "UnauthorizedError: private profile"
+        });
+    } else {
+        User
+            .findById(req.payload._id)
+            .exec(function(err, user) {
+                Project.find({adminUsers:user.id}, 'title description', function (err, projects) {
+                    if(err){
+                        sendJSONresponse(res, 400, {
+                            "message": err
+                        });
+                    }
+                    if(projects){
+                        res.status(200).json(projects);
+                    }
+                })
+            });
+    }
+
+};
+
+
+module.exports.getDeveloperProjects = function(req, res) {
+
+    if (!req.payload._id) {
+        res.status(401).json({
+            "message" : "UnauthorizedError: private profile"
+        });
+    } else {
+        User
+            .findById(req.payload._id)
+            .exec(function(err, user) {
+                Project.find({standardUsers:user.id}, 'title description', function (err, projects) {
+                    if(err){
+                        sendJSONresponse(res, 400, {
+                            "message": err
+                        });
+                    }
+                    if(projects){
+                        res.status(200).json(projects);
+                    }
+                })
+            });
+    }
+
+};
+
 module.exports.deleteMyProject = function(req, res) {
 
     if (!req.payload._id) {
