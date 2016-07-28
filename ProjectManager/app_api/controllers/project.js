@@ -230,6 +230,55 @@ module.exports.getMyProject = function(req, res) {
 
 };
 
+module.exports.deleteMyProject = function(req, res) {
+
+    if (!req.payload._id) {
+        res.status(401).json({
+            "message" : "UnauthorizedError: private profile"
+        });
+    } else {
+        User
+            .findById(req.payload._id)
+            .exec(function(err, user) {
+                if(err){
+                    sendJSONresponse(res, 400, {
+                        "message": 'err'+err
+                    });
+                    return;
+                }
+                Project.findOne({_id:req.params.id}, function (err, project){
+                    if(project){
+                        if(project.owner === user.id){
+                            Project.remove({_id:project.id}, function(err) {
+                                if (!err) {
+                                    res.status(200).json('project deleted');
+
+                                }
+                                else {
+                                    sendJSONresponse(res, 400, {
+                                        "message": 'cannot find'
+                                    });
+                                }
+                            });
+                        }else{
+                            sendJSONresponse(res, 400, {
+                                "message": 'only project owner can delete project!'
+                            });
+                        }
+                    }else{
+                        sendJSONresponse(res, 400, {
+                            "message": 'cannot find project with this id'
+                        });
+                    }
+
+                });
+
+            });
+    }
+
+};
+
+
 
 
 
