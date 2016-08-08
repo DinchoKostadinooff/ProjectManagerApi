@@ -2,8 +2,8 @@ var express = require('express');
 var router = express.Router();
 var jwt = require('express-jwt');
 var auth = jwt({
-  secret: 'MY_SECRET',
-  userProperty: 'payload'
+    secret: 'MY_SECRET',
+    userProperty: 'payload'
 });
 
 var ctrlProfile = require('../controllers/profile');
@@ -30,6 +30,8 @@ router.get('/admin/projects', auth, ctrlProject.getAdminProjects);
 router.get('/developer/projects', auth, ctrlProject.getDeveloperProjects);
 router.get('/project/:id', auth, ctrlProject.getProjectDetails);
 router.delete('/myProject/:id', auth, ctrlProject.deleteMyProject);
+//
+router.get('/conversation/:id', auth, ctrlProject.getConversationId);
 
 //chat
 router.post('/send/:conversationId', auth, ctrlChat.sendReply);

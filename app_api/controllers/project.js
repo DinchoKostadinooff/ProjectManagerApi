@@ -3,9 +3,9 @@
  */
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
-var Project= mongoose.model('Project');
-var Conversation= mongoose.model('Conversation');
-var Message= mongoose.model('Message');
+var Project = mongoose.model('Project');
+var Conversation = mongoose.model('Conversation');
+var Message = mongoose.model('Message');
 
 
 var sendJSONresponse = function(res, status, content) {
@@ -16,7 +16,7 @@ var sendJSONresponse = function(res, status, content) {
 module.exports.createProject = function(req, res) {
     if (!req.payload._id) {
         res.status(401).json({
-            "message" : "UnauthorizedError: private profile"
+            "message": "UnauthorizedError: private profile"
         });
 
     } else {
@@ -29,50 +29,52 @@ module.exports.createProject = function(req, res) {
                     res.status(400).json(err);
                 }
 
-                Project.findOne({ title:req.body.title}, function (err, title){
-                    if(err){
+                Project.findOne({
+                    title: req.body.title
+                }, function(err, title) {
+                    if (err) {
                         sendJSONresponse(res, 400, {
                             "message": err
                         });
                     }
-                    if(!req.body.title || !req.body.description) {
+                    if (!req.body.title || !req.body.description) {
                         sendJSONresponse(res, 400, {
                             "message": "title and description are required!"
                         });
                         return;
                     }
-                    if(req.body.title.length<=5){
+                    if (req.body.title.length <= 5) {
                         sendJSONresponse(res, 400, {
                             "message": "title must be more than 5 symbols"
                         });
                         return;
                     }
 
-                    if(req.body.title.length>=50){
+                    if (req.body.title.length >= 50) {
                         sendJSONresponse(res, 400, {
                             "message": "title cannot be more than 50 symbols"
                         });
                         return;
                     }
-                    if(req.body.description.length<=5){
+                    if (req.body.description.length <= 5) {
                         sendJSONresponse(res, 400, {
                             "message": "title must be more than 5 symbols"
                         });
                         return;
                     }
 
-                    if(req.body.description.length>=600){
+                    if (req.body.description.length >= 600) {
                         sendJSONresponse(res, 400, {
                             "message": "description cannot be more than 600 symbols"
                         });
                         return;
                     }
 
-                    if(title){
+                    if (title) {
                         sendJSONresponse(res, 400, {
                             "message": "project exist"
                         });
-                    }else{
+                    } else {
 
                         var project = new Project();
 
@@ -80,11 +82,11 @@ module.exports.createProject = function(req, res) {
                         project.owner = user.id;
                         project.description = req.body.description;
 
-                        if(req.body.adminUsers){
+                        if (req.body.adminUsers) {
                             project.adminUsers = req.body.adminUsers.split(',');
                         }
-                        if(req.body.standardUsers){
-                            project.standardUsers=req.body.standardUsers.split(',');
+                        if (req.body.standardUsers) {
+                            project.standardUsers = req.body.standardUsers.split(',');
                         }
 
 
@@ -96,7 +98,7 @@ module.exports.createProject = function(req, res) {
 
                             var conversation = new Conversation({
                                 participants: [user.id],
-                                projectId:project.id
+                                projectId: project.id
                             });
 
                             project.adminUsers.forEach(function(id) {
@@ -109,22 +111,30 @@ module.exports.createProject = function(req, res) {
 
                             conversation.save(function(err, newConversation) {
                                 if (err) {
-                                    res.send({ error: err });
+                                    res.send({
+                                        error: err
+                                    });
 
                                 }
 
                                 const message = new Message({
                                     conversationId: newConversation._id,
-                                    author:user.id
+                                    author: user.id
                                 });
 
                                 message.save(function(err, newMessage) {
                                     if (err) {
-                                        res.send({ error: err });
+                                        res.send({
+                                            error: err
+                                        });
 
                                     }
 
-                                    res.status(200).json({ message: 'Conversation started!', conversationId: conversation._id ,projectId:conversation.projectId});
+                                    res.status(200).json({
+                                        message: 'Conversation started!',
+                                        conversationId: conversation._id,
+                                        projectId: conversation.projectId
+                                    });
 
                                 });
                             });
@@ -146,7 +156,7 @@ module.exports.createProject = function(req, res) {
 module.exports.updateProject = function(req, res) {
     if (!req.payload._id) {
         res.status(401).json({
-            "message" : "UnauthorizedError: private profile"
+            "message": "UnauthorizedError: private profile"
         });
 
     } else {
@@ -160,40 +170,39 @@ module.exports.updateProject = function(req, res) {
                 }
 
 
-                Project.findById(req.params.id, function (err, project){
-                    if(err){
+                Project.findById(req.params.id, function(err, project) {
+                    if (err) {
                         sendJSONresponse(res, 400, {
                             "message": err
                         });
                     }
 
-                    function isAdmin()
-                    {
+                    function isAdmin() {
                         var result;
-                        project.adminUsers.forEach(function (id) {
+                        project.adminUsers.forEach(function(id) {
 
-                            if(id===user.id){
-                                result=true
-                            }else{
-                                result=false
+                            if (id === user.id) {
+                                result = true
+                            } else {
+                                result = false
                             }
                         })
                         return result;
                     }
 
 
-                    if(project){
-                        if(project.owner===user.id|| isAdmin()){
+                    if (project) {
+                        if (project.owner === user.id || isAdmin()) {
                             project.title = req.body.title || project.title;
                             project.description = req.body.description || project.description;
                             project.status = req.body.status || project.status;
 
-                            if(req.body.adminUsers){
+                            if (req.body.adminUsers) {
 
                                 project.adminUsers = req.body.adminUsers.split(',');
 
                             }
-                            if(req.body.standardUsers){
+                            if (req.body.standardUsers) {
 
                                 project.standardUsers = req.body.standardUsers.split(',');
 
@@ -201,9 +210,9 @@ module.exports.updateProject = function(req, res) {
 
 
                             project.save(function(err) {
-                                if (err){
+                                if (err) {
                                     res.status(400).json(err);
-                                }else{
+                                } else {
 
                                     res.status(200);
                                     res.json(project);
@@ -211,13 +220,13 @@ module.exports.updateProject = function(req, res) {
 
                             });
 
-                        }else{
+                        } else {
                             sendJSONresponse(res, 400, {
                                 "message": 'only projectOwner or projectAdmin can update project data!'
                             });
                         }
 
-                    }else{
+                    } else {
                         sendJSONresponse(res, 400, {
                             "message": 'cannot find project!'
                         });
@@ -233,21 +242,23 @@ module.exports.getMyProject = function(req, res) {
 
     if (!req.payload._id) {
         res.status(401).json({
-            "message" : "UnauthorizedError: private profile"
+            "message": "UnauthorizedError: private profile"
         });
     } else {
         User
             .findById(req.payload._id)
             .exec(function(err, user) {
-                Project.find({owner:user.id}, 'title description', function (err, projects) {
-                   if(err){
-                       sendJSONresponse(res, 400, {
-                           "message": err
-                       });
-                   }
-                   if(projects){
-                       res.status(200).json(projects);
-                   }
+                Project.find({
+                    owner: user.id
+                }, function(err, projects) {
+                    if (err) {
+                        sendJSONresponse(res, 400, {
+                            "message": err
+                        });
+                    }
+                    if (projects) {
+                        res.status(200).json(projects);
+                    }
                 })
             });
     }
@@ -258,19 +269,21 @@ module.exports.getAdminProjects = function(req, res) {
 
     if (!req.payload._id) {
         res.status(401).json({
-            "message" : "UnauthorizedError: private profile"
+            "message": "UnauthorizedError: private profile"
         });
     } else {
         User
             .findById(req.payload._id)
             .exec(function(err, user) {
-                Project.find({adminUsers:user.id}, 'title description', function (err, projects) {
-                    if(err){
+                Project.find({
+                    adminUsers: user.id
+                }, 'title description', function(err, projects) {
+                    if (err) {
                         sendJSONresponse(res, 400, {
                             "message": err
                         });
                     }
-                    if(projects){
+                    if (projects) {
                         res.status(200).json(projects);
                     }
                 })
@@ -284,19 +297,21 @@ module.exports.getDeveloperProjects = function(req, res) {
 
     if (!req.payload._id) {
         res.status(401).json({
-            "message" : "UnauthorizedError: private profile"
+            "message": "UnauthorizedError: private profile"
         });
     } else {
         User
             .findById(req.payload._id)
             .exec(function(err, user) {
-                Project.find({standardUsers:user.id}, 'title description', function (err, projects) {
-                    if(err){
+                Project.find({
+                    standardUsers: user.id
+                }, 'title description', function(err, projects) {
+                    if (err) {
                         sendJSONresponse(res, 400, {
                             "message": err
                         });
                     }
-                    if(projects){
+                    if (projects) {
                         res.status(200).json(projects);
                     }
                 })
@@ -309,38 +324,41 @@ module.exports.deleteMyProject = function(req, res) {
 
     if (!req.payload._id) {
         res.status(401).json({
-            "message" : "UnauthorizedError: private profile"
+            "message": "UnauthorizedError: private profile"
         });
     } else {
         User
             .findById(req.payload._id)
             .exec(function(err, user) {
-                if(err){
+                if (err) {
                     sendJSONresponse(res, 400, {
-                        "message": 'err'+err
+                        "message": 'err' + err
                     });
                     return;
                 }
-                Project.findOne({_id:req.params.id}, function (err, project){
-                    if(project){
-                        if(project.owner === user.id){
-                            Project.remove({_id:project.id}, function(err) {
+                Project.findOne({
+                    _id: req.params.id
+                }, function(err, project) {
+                    if (project) {
+                        if (project.owner === user.id) {
+                            Project.remove({
+                                _id: project.id
+                            }, function(err) {
                                 if (!err) {
                                     res.status(200).json('project deleted');
 
-                                }
-                                else {
+                                } else {
                                     sendJSONresponse(res, 400, {
                                         "message": 'cannot find'
                                     });
                                 }
                             });
-                        }else{
+                        } else {
                             sendJSONresponse(res, 400, {
                                 "message": 'only project owner can delete project!'
                             });
                         }
-                    }else{
+                    } else {
                         sendJSONresponse(res, 400, {
                             "message": 'cannot find project with this id'
                         });
@@ -357,19 +375,19 @@ module.exports.getProjectDetails = function(req, res) {
 
     if (!req.payload._id) {
         res.status(401).json({
-            "message" : "UnauthorizedError: private profile"
+            "message": "UnauthorizedError: private profile"
         });
     } else {
         User
             .findById(req.payload._id)
             .exec(function(err, user) {
-                Project.findById(req.params.id, function (err, project) {
-                    if(err){
+                Project.findById(req.params.id, function(err, project) {
+                    if (err) {
                         sendJSONresponse(res, 400, {
                             "message": 'cannot find project'
                         });
                     }
-                    if(project){
+                    if (project) {
                         res.status(200).json(project);
                     }
                 })
@@ -378,5 +396,31 @@ module.exports.getProjectDetails = function(req, res) {
 
 };
 
+module.exports.getConversationId = function(req, res) {
 
+    if (!req.payload._id) {
+        res.status(401).json({
+            "message": "UnauthorizedError: private profile"
+        });
+    } else {
+        User
+            .findById(req.payload._id)
+            .exec(function(err, user) {
+                Conversation.findOne({
+                    projectId: req.params.id
+                }, function(err, conversation) {
+                    if (err) {
+                        sendJSONresponse(res, 400, {
+                            "message": err
+                        });
+                    }
+                    if (conversation) {
+                        res.status(200).json({
+                            id: conversation.id
+                        });
+                    }
+                })
+            });
+    }
 
+};

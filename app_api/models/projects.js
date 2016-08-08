@@ -1,7 +1,7 @@
 /**
  * Created by dincho.kostadinov on 26.7.2016 г..
  */
-var mongoose = require( 'mongoose' );
+var mongoose = require('mongoose');
 
 var projectSchema = new mongoose.Schema({
     title: {
@@ -17,14 +17,12 @@ var projectSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    status:{
-        type:Boolean,
+    status: {
+        type: Boolean,
         default: true
     },
-    adminUsers:[]
-    ,
-    standardUsers:[]
-    ,
+    adminUsers: [],
+    standardUsers: [],
     conversationId: {
         type: String
     }

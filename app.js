@@ -5,15 +5,15 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var passport = require('passport');
-var  http = require('http');
+var http = require('http');
 var app = express();
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 
 require('./app_api/models/db');
 require('./app_api/config/passport');
-var Message=require('./app_api/models/messages')
-var Conversation=require('./app_api/models/conversation')
+var Message = require('./app_api/models/messages');
+var Conversation = require('./app_api/models/conversation');
 
 
 var routesApi = require('./app_api/routes/index');
@@ -22,16 +22,16 @@ var routesApi = require('./app_api/routes/index');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'ejs');
 
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use(express.static(path.join(__dirname, 'app_client')));
+app.use(express.static(path.join(__dirname, '../client')));
 
 
 app.use(passport.initialize());
@@ -47,7 +47,7 @@ app.all("/api/*", function(req, res, next) {
 app.use('/api', routesApi);
 
 app.use(function(req, res) {
-  res.sendFile(path.join(__dirname, 'app_client', 'index.html'));
+    res.render('index');
 });
 
 
@@ -61,11 +61,13 @@ app.use(function(req, res, next) {
 // error handlers
 
 //  Catch unauthorised errors
-app.use(function (err, req, res, next) {
-  if (err.name === 'UnauthorizedError') {
-    res.status(401);
-    res.json({"message" : err.name + ": " + err.message});
-  }
+app.use(function(err, req, res, next) {
+    if (err.name === 'UnauthorizedError') {
+        res.status(401);
+        res.json({
+            "message": err.name + ": " + err.message
+        });
+    }
 });
 
 // development error handler
@@ -92,30 +94,32 @@ app.use(function(err, req, res, next) {
 
 
 module.exports = server;
-server.listen(7777, function () {
+server.listen(7777, function() {
     console.log(' app listening on port 7777!');
 });
-io.sockets.on('connection', function(socket){
+io.sockets.on('connection', function(socket) {
+    console.log("user connected!");
     socket.on('subscribe', function(conversation) {
-        console.log('joining conversation',conversation);
+        console.log('joining conversation ' + conversation);
         socket.join(conversation);
-    })
+    });
 
     socket.on('unsubscribe', function(conversation) {
-        console.log('leaving conversation',conversation);
+        console.log('leaving conversation ' + conversation);
         socket.leave(conversation);
-    })
+    });
 
     socket.on('send', function(data) {
+        var message = new Message();
+        message.conversationId = data.conversationId;
+        message.body = data.body;
+        message.author = data.author;
 
-        var message=new Message();
-        message.conversationId=data.conversationId;
-        message.body=data.body;
-        message.author=data.author;
-        io.sockets.in(data.conversationId).emit('message', data.body);
-        message.save(function(err,message) {
-            console.log(message.body)
+        message.save(function(err, message) {
+            console.log("Message saved!");
         });
+
+        socket.to(data.conversationId).emit('send', message);
 
     });
 });
