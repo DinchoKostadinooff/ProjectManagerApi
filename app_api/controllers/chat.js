@@ -67,3 +67,29 @@ exports.getConversation = function(req, res, next) {
 
 
 }
+exports.getConversationParticipants = function(req, res, next) {
+    if (!req.payload._id) {
+        res.status(401).json({
+            "message" : "UnauthorizedError: private profile"
+        });
+    } else {
+        User
+            .findById(req.payload._id)
+            .exec(function(err, user) {
+
+                Conversation.findOne({_id: req.params.conversationId })
+                    .select('participants')
+                    .exec(function(err, participants) {
+                        if (err) {
+                            res.send({ error: err });
+                            return next(err);
+                        }
+
+                        res.status(200).json({participants:participants.participants });
+                    });
+
+            });
+    }
+
+
+}

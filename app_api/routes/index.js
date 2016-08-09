@@ -36,5 +36,6 @@ router.get('/conversation/:id', auth, ctrlProject.getConversationId);
 //chat
 router.post('/send/:conversationId', auth, ctrlChat.sendReply);
 router.get('/chat/:conversationId', auth, ctrlChat.getConversation);
+router.get('/chat/participants/:conversationId', auth, ctrlChat.getConversationParticipants);
 
 module.exports = router;

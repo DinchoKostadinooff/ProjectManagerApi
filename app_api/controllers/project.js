@@ -387,7 +387,7 @@ module.exports.deleteMyProject = function(req, res) {
                                 }
 
                             });
-                            
+
                         } else {
                             sendJSONresponse(res, 400, {
                                 "message": 'only project owner can delete project!'
