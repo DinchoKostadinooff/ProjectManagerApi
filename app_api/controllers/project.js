@@ -152,6 +152,7 @@ module.exports.createProject = function(req, res) {
     }
 }
 
+
 module.exports.updateProject = function(req, res) {
     if (!req.payload._id) {
         res.status(401).json({
@@ -213,58 +214,8 @@ module.exports.updateProject = function(req, res) {
                                     res.status(400).json(err);
                                 } else {
 
-                                    Conversation.findOne({projectId: project.id}, function (err, conversation) {
-                                        if (err) {
-                                            res.status(400).json(err);
-                                        }
-
-
-                                        conversation.participants = [user.id];
-                                        conversation.projectId = project.id;
-
-                                        project.adminUsers.forEach(function (id) {
-                                            conversation.participants.push(id)
-                                        });
-
-                                        project.standardUsers.forEach(function (id) {
-                                            conversation.participants.push(id)
-                                        });
-
-                                        conversation.save(function (err, newConversation) {
-                                            if (err) {
-                                                res.send({
-                                                    error: err
-                                                });
-
-                                            }
-
-                                            var message = new Message({
-                                                conversationId: newConversation._id,
-                                                author: user.id
-                                            });
-
-                                            message.save(function (err, newMessage) {
-                                                if (err) {
-                                                    res.send({
-                                                        error: err
-                                                    });
-
-                                                }
-
-                                                res.status(200).json({
-                                                    message: 'project and conversation Updated!',
-                                                    conversation: conversation,
-                                                    project: project
-                                                });
-
-                                            });
-
-                                        });
-
-
-
-                                    });
-
+                                    res.status(200);
+                                    res.json(project);
                                 }
 
                             });
@@ -286,6 +237,7 @@ module.exports.updateProject = function(req, res) {
             })
     }
 }
+
 module.exports.getMyProject = function(req, res) {
 
     if (!req.payload._id) {
@@ -389,18 +341,53 @@ module.exports.deleteMyProject = function(req, res) {
                 }, function(err, project) {
                     if (project) {
                         if (project.owner === user.id) {
-                            Project.remove({
-                                _id: project.id
-                            }, function(err) {
-                                if (!err) {
-                                    res.status(200).json('project deleted');
 
+                            Conversation.findOne({
+                                projectId: project.id
+                            }, function(err, conversation) {
+                                if (conversation) {
+                                    Message.remove({
+                                        conversationId:conversation.id
+                                    }, function(err) {
+                                        if (!err) {
+                                            Conversation.remove({
+                                                _id: conversation.id
+                                            }, function(err) {
+                                                if (!err) {
+                                                    Project.remove({
+                                                        _id: project.id
+                                                    }, function(err) {
+                                                        if (!err) {
+                                                            res.status(200).json('project and projectconversation  deleted ');
+
+                                                        } else {
+                                                            sendJSONresponse(res, 400, {
+                                                                "message": 'cannot find'
+                                                            });
+                                                        }
+                                                    });
+
+                                                } else {
+                                                    sendJSONresponse(res, 400, {
+                                                        "message": 'cannot find'
+                                                    });
+                                                }
+                                            });
+
+                                        } else {
+                                            sendJSONresponse(res, 400, {
+                                                "message": 'cannot find'
+                                            });
+                                        }
+                                    });
                                 } else {
                                     sendJSONresponse(res, 400, {
-                                        "message": 'cannot find'
+                                        "message": 'cannot find '
                                     });
                                 }
+
                             });
+                            
                         } else {
                             sendJSONresponse(res, 400, {
                                 "message": 'only project owner can delete project!'
@@ -472,4 +459,3 @@ module.exports.getConversationId = function(req, res) {
     }
 
 };
-
