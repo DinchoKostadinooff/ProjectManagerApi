@@ -25,7 +25,8 @@ var projectSchema = new mongoose.Schema({
     standardUsers: [],
     conversationId: {
         type: String
-    }
+    },
+    createdAt: { type: Date, default: Date.now },
 
 });
 

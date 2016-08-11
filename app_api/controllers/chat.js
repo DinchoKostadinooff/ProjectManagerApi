@@ -84,8 +84,19 @@ exports.getConversationParticipants = function(req, res, next) {
                             res.send({ error: err });
                             return next(err);
                         }
+                        function names() {
+                                var arr;
+                            participants.participants.forEach(function(id) {
 
-                        res.status(200).json({participants:participants.participants });
+                                User.findOne({_id:id},'name', function (err, name) {
+                                    arr+=name.name
+                                })
+
+                            });
+                            return arr
+                        }
+
+                      console.log(names())
                     });
 
             });
