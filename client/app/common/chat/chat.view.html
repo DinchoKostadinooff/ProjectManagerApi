@@ -26,7 +26,7 @@
             </div>
         </div>
     </div>
-    <div class="panel-body scroll">
+    <div class="panel-body scroll" id="scroll{{id}}">
         <ul ng-repeat="message in messages track by $index | toArray:true" id="messages">
             <li ng-show="isMe(message.author._id)" class="text-right">
                 <div class="content1" ng-class="{red:checkPositionMessage(message.body)}">{{message.body}}</div>

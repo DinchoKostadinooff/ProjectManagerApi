@@ -37,7 +37,7 @@
                     $location.path('/dashboard');
                 }, function(err) {
                     // Displaying the err
-                    toastr.error(err);
+                    toastr.error(err.message);
                 });
             } else {
                 // Displaying if the form is invalid

@@ -352,17 +352,6 @@ label.col-sm-2
     text-align: right;
 }
 
-.tab-pane.active
-{
-    display: flex;
-    flex-direction: row;
-
-    margin-top: 20px;
-
-    flex-wrap: wrap;
-    flex-shrink: 1;
-}
-
 div.pull-right
 {
     margin-top: 20%;
@@ -387,7 +376,7 @@ div.pull-right
 {
     overflow-x: hidden;
     overflow-y: scroll;
-
+    height: 350px;
     max-height: 350px;
 }
 #messages
@@ -457,6 +446,7 @@ div.pull-right
 .panel-body.scroll
 {
     margin-bottom: 4%;
+    padding-bottom: 0;
 }
 .after-panel-body
 {

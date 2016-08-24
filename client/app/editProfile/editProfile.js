@@ -41,6 +41,7 @@
                     }, function(err) {
                         // Showing error message
                         console.log(err);
+                        toastr.error('Wrong password');
                     });
                 } else {
                     // Showing message if passwords dont match

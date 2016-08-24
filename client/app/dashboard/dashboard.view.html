@@ -15,7 +15,7 @@
           <div class="col-md-4 equal" ng-repeat="project in projects | toArray | orderBy:sortOwner | startFrom:(currentPageOwner - 1) * pageSize | limitTo: pageSize">
             <chat title="project.title" description="project.description" id="project._id" role="project.position" admins="project.adminUsers" developers="project.standardUsers"></chat>
         </div>
-        <div class="col-md-12 text-center center-block" ng-show="projects.length > 3">
+        <div class="col-md-12 text-center center-block" ng-show="projects.length > 6">
             <uib-pagination total-items="projects.length" ng-model="currentPageOwner" items-per-page="pageSize"
                             class="pagination" boundary-links="true" first-text="«" last-text="»" direction-links="false"></uib-pagination>
         </div>

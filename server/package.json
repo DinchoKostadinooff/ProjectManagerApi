@@ -2,8 +2,12 @@
   "name": "ProjectManager",
   "version": "0.0.1",
   "private": true,
+  "main":"app.js",
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node app.js"
+  },
+  "engines":{
+    "node":"0.12.7"
   },
   "dependencies": {
     "body-parser": "~1.10.2",
