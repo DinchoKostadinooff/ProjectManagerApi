@@ -1,0 +1,22 @@
+<div class="container row profile-update">
+  <legend class="text-center">Dashboard</legend>
+
+          <div class="col-md-12">
+            <div class="form-group col-md-4">
+              <label for="sel1">Sort by:</label>
+              <select class="form-control" ng-model="sortOwner">
+                <option value="" disabled selected>Select your option</option>
+                <option value="title">Title</option>
+                <option value="-createdAt">Date</option>
+              </select>
+
+            </div>
+          </div>
+          <div class="col-md-4 equal" ng-repeat="project in projects | toArray | orderBy:sortOwner | startFrom:(currentPageOwner - 1) * pageSize | limitTo: pageSize">
+            <chat title="project.title" description="project.description" id="project._id" role="project.position" admins="project.adminUsers" developers="project.standardUsers"></chat>
+        </div>
+        <div class="col-md-12 text-center center-block" ng-show="projects.length > 3">
+            <uib-pagination total-items="projects.length" ng-model="currentPageOwner" items-per-page="pageSize"
+                            class="pagination" boundary-links="true" first-text="«" last-text="»" direction-links="false"></uib-pagination>
+        </div>
+</div>

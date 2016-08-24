@@ -1,0 +1,86 @@
+<div class="container profile-update">
+    <form class="form-horizontal form-update" role="form" name="UpdateForm">
+        <legend class="text-center">Update Profile Info</legend>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="name">Full name:</label>
+            <div class="col-sm-10">
+                <input type="text" name="name" required="required" id="name" tabindex="1"
+                       class="form-control" placeholder="Full name" value=""
+                       ng-model="user.name" validator="required" required-error-message="Please enter Full Name"
+                       minlength="5">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="email">Email:</label>
+            <div class="col-sm-10">
+                <input type="email" class="form-control" id="email" placeholder="Email" ng-model="user.email"
+                       validator="email" email-error-message="Please enter existing Email" message-id="emailWatch">
+                <span id="emailWatch"><p class="validation-invalid ng-scope">Please enter existing Email</p></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="password-old">Password:</label>
+            <div class="col-sm-10">
+                <input id="password-old"
+                       class="form-control form-validation"
+                       type="password"
+                       data-toggle="password"
+                       placeholder="Password"
+                       ng-model="user.oldPassword"
+                       required="required"
+                       minlength="6">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="password-new">New-password:</label>
+            <div class="col-sm-10">
+                <input type="password" name="password" id="password-new" class="form-control" minlength="6"
+                       tabindex="3"
+                       class="form-control form-validation" placeholder="New-password" ng-model="user.newPassword"
+                       required-error-message="Please enter password">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="password-new">Confirm New-password:</label>
+            <div class="col-sm-10">
+                <input type="password" name="password" id="password-new-confirm" class="form-control" minlength="6"
+                       tabindex="4"
+                       class="form-control form-validation" placeholder="Confirm New-password" ng-model="user.newPasswordConfirm"
+                       required-error-message="Please enter password">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Position:</label>
+            <div class="col-sm-10">
+                <label class="radio-inline">
+                    <input type="radio" name="optradio" value="Front-End" ng-model="user.position" required>Front-End
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="optradio" value="Back-End" ng-model="user.position">Back-End
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="optradio" value="Full-Stack" ng-model="user.position">Full-Stack
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-default" ng-click="update(UpdateForm)">Save</button>
+            </div>
+        </div>
+    </form>
+    <script>
+        $(function () {
+            $('#password-old').password().on('show.bs.password',function (e) {
+                $('#eventLog').text('On show event');
+                $('#methods').prop('checked', true);
+            }).on('hide.bs.password', function (e) {
+                $('#eventLog').text('On hide event');
+                $('#methods').prop('checked', false);
+            });
+            $('#methods').click(function () {
+                $('#password-old').password('toggle');
+            });
+        });
+    </script>
+</div>

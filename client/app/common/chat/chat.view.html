@@ -1,0 +1,98 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div>
+            <p>
+               {{title}}
+            </p>
+            <a href="project/{{id}}" ng-show="showPrivileges('edit')" class="pull-right">
+                <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="{{id}}">
+                    <span class="glyphicon glyphicon-wrench pull-right"></span>
+                </button>
+            </a>
+            <a href="" class="pull-right">
+                <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#{{id}}">
+                    <span class="glyphicon glyphicon-info-sign pull-right"></span>
+                </button>
+            </a>
+            <a href="" class="pull-right">
+                <button type="button" class="btn btn-default btn-sm pull-right" ng-show="showPrivileges('delete')"
+                        ng-click="deleteProject(id)">
+                    <span class="glyphicon glyphicon-remove pull-right"></span>
+                </button>
+            </a>
+
+            <div class="members">
+              <li ng-repeat="author in authors"><span class="label label-primary">{{author.name}}</span></li>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body scroll">
+        <ul ng-repeat="message in messages track by $index | toArray:true" id="messages">
+            <li ng-show="isMe(message.author._id)" class="text-right">
+                <div class="content1" ng-class="{red:checkPositionMessage(message.body)}">{{message.body}}</div>
+                <div class="clearfix"></div>
+                <small>{{displayAuthor(message.author._id)}} {{message.createdAt | date:'short' }}</small>
+            </li>
+            <li ng-show="!isMe(message.author._id)" class="text-left">
+                <span class="sender">{{displayAuthor(message.author._id)}}</span>
+                <div class="content" ng-class="{red:checkPositionMessage(message.body)}">
+                    {{message.body}}
+                </div>
+                <small>{{message.createdAt | date:'short' }}</small>
+            </li>
+        </ul>
+
+    </div>
+    <div class="after-panel-body">
+        <form role="form" ng-submit="sendMessage(MessageForm)" name="MessageForm">
+            <div class="inner-addon left-addon">
+                <div class="col-md-10">
+                    <input type="text" ng-model="message" class="form-control" placeholder="Enter message" required>
+                </div>
+            </div>
+        </form>
+        <div class="col-md-2">
+            <button type="button" class="btn btn-default btn-sm pull-right button-send"ng-click="sendMessage(MessageForm)">
+                <span class="glyphicon glyphicon-send pull-right"></span>
+            </button>
+            <br>
+        </div>
+        <br>
+        <div class="senders">
+          <a href="#" class="btn btn-primary btn-xs" ng-click="sendToRoleMessage('frontEnd')">To Frontend</a>
+          <a href="#" class="btn btn-primary btn-xs" ng-click="sendToRoleMessage('backEnd')">To Backend</a>
+          <a href="#" class="btn btn-primary btn-xs" ng-click="sendToRoleMessage('fullStack')">To Fullstack</a>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="{{id}}" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">{{title}}</h4>
+          </div>
+          <div class="modal-body">
+
+            <div class="container">
+              <ul style="list-style-type:none;padding-left:0">
+                <li ng-repeat="author in authors"><span class="label label-primary">{{author.name}}</span></li>
+              </ul>
+              <div class="row">
+                <div class="col-md-4">
+                  {{description}}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+</div>

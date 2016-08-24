@@ -1,0 +1,37 @@
+{
+  "name": "Project Manager",
+  "authors": [
+    "Boyan Chakandrakov and Petar Yanakiev"
+  ],
+  "description": "",
+  "main": "index.html",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.5.7",
+    "angular-route": "^1.5.7",
+    "bootstrap": "^3.3.6",
+    "jquery": "^3.1.0",
+    "toastr": "^2.1.2",
+    "angular-cookie": "^4.1.0",
+    "ngstorage": "^0.3.10",
+    "angular-cookies": "^1.5.7",
+    "angular-validation": "^1.4.1",
+    "isteven-angular-multiselect": "^4.0.0",
+    "angular-ui-select": "^0.18.1",
+    "angular-sanitize": "^1.5.8",
+    "bootstrap-show-password": "^1.0.3",
+    "bootbox.js": "bootbox#^4.4.0",
+    "ng-tags-input": "^3.1.1",
+    "angular-socket-io": "^0.7.0",
+    "angular-bootstrap": "^2.1.1",
+    "angular-web-notification": "^0.0.91"
+  }
+}
