@@ -124,7 +124,7 @@ io.sockets.on('connection', function(socket) {
 
         message.save(function(err, message) {
             console.log('Message saved!');
-            socket.to(data.conversationId).emit('send', message);
+            socket.to(data.conversationId).emit('send', message, data.toRole);
         });
 
     });

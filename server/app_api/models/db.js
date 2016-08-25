@@ -13,13 +13,13 @@ mongoose.connect(dbURI);
  * on disconnection-Mongoose disconnected
  */
 
-mongoose.connection.on('connected', function () {
+mongoose.connection.on('connected', function() {
     console.log('Mongoose connected to ' + dbURI);
 });
-mongoose.connection.on('error', function (err) {
+mongoose.connection.on('error', function(err) {
     console.log('Mongoose connection error: ' + err);
 });
-mongoose.connection.on('disconnected', function () {
+mongoose.connection.on('disconnected', function() {
     console.log('Mongoose disconnected');
 });
 
@@ -28,8 +28,8 @@ mongoose.connection.on('disconnected', function () {
  * @param {string} msg .
  * @param {callback} callback .
  */
-gracefulShutdown = function (msg, callback) {
-    mongoose.connection.close(function () {
+gracefulShutdown = function(msg, callback) {
+    mongoose.connection.close(function() {
         console.log('Mongoose disconnected through ' + msg);
         callback();
     });

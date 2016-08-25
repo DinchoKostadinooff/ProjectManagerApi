@@ -106,11 +106,11 @@ module.exports.createProject = function(req, res) {
                             });
 
                             project.adminUsers.forEach(function(id) {
-                                conversation.participants.push(id)
+                                conversation.participants.push(id);
                             });
 
                             project.standardUsers.forEach(function(id) {
-                                conversation.participants.push(id)
+                                conversation.participants.push(id);
                             });
 
                             conversation.save(function(err, newConversation) {
@@ -121,7 +121,7 @@ module.exports.createProject = function(req, res) {
 
                                 }
 
-                                const message = new Message({
+                                var message = new Message({
                                     conversationId: newConversation._id,
                                     author: user.id,
                                     body: 'Conversation created!'
@@ -143,14 +143,14 @@ module.exports.createProject = function(req, res) {
 
                                 });
                             });
-                        })
+                        });
 
 
                     }
                 });
-            })
+            });
     }
-}
+};
 
 /**
  * Update project
@@ -188,11 +188,11 @@ module.exports.updateProject = function(req, res) {
                         project.adminUsers.forEach(function(id) {
 
                             if (id === user.id) {
-                                result = true
+                                result = true;
                             } else {
-                                result = false
+                                result = false;
                             }
-                        })
+                        });
                         return result;
                     }
 
@@ -232,11 +232,11 @@ module.exports.updateProject = function(req, res) {
                                         conversation.projectId = project.id;
 
                                         project.adminUsers.forEach(function(id) {
-                                            conversation.participants.push(id)
+                                            conversation.participants.push(id);
                                         });
 
                                         project.standardUsers.forEach(function(id) {
-                                            conversation.participants.push(id)
+                                            conversation.participants.push(id);
                                         });
 
                                         conversation.save(function(err, newConversation) {

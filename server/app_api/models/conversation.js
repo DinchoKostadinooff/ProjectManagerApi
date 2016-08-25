@@ -7,7 +7,10 @@ var mongoose = require('mongoose'),
  */
 
 var ConversationSchema = new Schema({
-    participants: [{type: Schema.Types.ObjectId, ref: 'User'}],
+    participants: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
     projectId: {
         type: String
     }

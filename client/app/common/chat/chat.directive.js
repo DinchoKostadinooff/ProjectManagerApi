@@ -48,6 +48,7 @@
             scope.isMe = isMe;
             scope.deleteProject = deleteProject;
             scope.sendToRoleMessage = sendToRoleMessage;
+            scope.checkRoleToSend = checkRoleToSend;
             scope.checkPositionMessage = checkPositionMessage;
             scope.showPrivileges = showPrivileges;
             // Initiaziling conversation
@@ -78,14 +79,15 @@
                     // Subscribing to the conversation channel
                     chatSocket.emit('subscribe', data.id);
                     // Start listening for event 'send'
-                    chatSocket.on('send', function(data) {
+                    chatSocket.on('send', function(data, role) {
                         if (data.conversationId === conId) {
                             scope.messages.push({
                                 body: data.body,
                                 author: {
                                     _id: data.author
                                 },
-                                createdAt: data.createdAt
+                                createdAt: data.createdAt,
+                                roleToSend: role
                             });
                         }
                         // Scrolling the current chat view
@@ -128,14 +130,15 @@
                             keyword: roleToSend,
                             conversationId: conId,
                             authorId: identity.getId(),
-                            body: scope.message.replace('@' + roleToSend, '')
+                            body: scope.message
                         });
                     }
                     // Sending an ordinary message
                     chatSocket.emit('send', {
                         conversationId: conId,
                         author: identity.getId(),
-                        body: scope.message
+                        body: scope.message,
+                        toRole: roleToSend
                     });
                     // Pushing the message to scope model
                     scope.messages.push({
@@ -217,20 +220,9 @@
              * @return Void sets the message to be a notification also not just message
              */
             function sendToRoleMessage(role) {
-                // Checking for role and applying it to the message tex
+                // Checking for role and applying it to the local variable
                 if (roles.hasOwnProperty(role)) {
                     roleToSend = roles[role];
-                    if (!scope.message) {
-                        msg = '@' + roleToSend + ' ';
-                    } else {
-                        // Making sure that the message is just send to single role
-                        scope.message = scope.message.replace('@Front-End ', '');
-                        scope.message = scope.message.replace('@Back-End ', '');
-                        scope.message = scope.message.replace('@Full-stack ', '');
-                        msg = '@' + roleToSend + ' ' + scope.message;
-                    }
-                    // Apllying message to scope
-                    scope.message = msg;
                 }
             }
             /**
@@ -238,8 +230,8 @@
              * @param {message} String Message received and send
              * @return Boolean true if the notification message is for the user and false if nah
              */
-            function checkPositionMessage(message) {
-                if (message.indexOf('@' + currPosition) > -1) {
+            function checkPositionMessage(role) {
+                if (role === currPosition) {
                     return true;
                 }
                 return false;
@@ -257,10 +249,19 @@
                 }
                 return false;
             }
+
+            function checkRoleToSend(role) {
+                if (roleToSend === role) {
+                    return true;
+                }
+                return false;
+            }
             // Scrolles the current view to the bottom
             function chatScroll() {
                 $timeout(function() {
-                    $('#scroll' + scope.id).scrollTop($('#scroll' + scope.id)[0].scrollHeight);
+                    if ($('#scroll' + scope.id)[0].scrollHeight) {
+                        $('#scroll' + scope.id).scrollTop($('#scroll' + scope.id)[0].scrollHeight);
+                    }
                 }, 300);
             }
 

@@ -480,3 +480,7 @@ div.pull-right
 .col-md-12 select {
   display: inline-block;
 }
+.senders .btn.btn-primary.btn-xs.btn_red,.btn-primary:hover,.btn-primary:active,.btn-primary:focus{
+  background-color: #f1404b;
+  color:#f4f5f9;
+}

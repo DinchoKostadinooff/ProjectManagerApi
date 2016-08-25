@@ -6,7 +6,7 @@ var User = mongoose.model('User');
  * @param status-status code (example 200,400,401...).
  * @param content-json content.
  */
-var sendJSONresponse = function (res, status, content) {
+var sendJSONresponse = function(res, status, content) {
     res.status(status);
     res.json(content);
 };
@@ -15,7 +15,7 @@ var sendJSONresponse = function (res, status, content) {
  * @param email
  * @returns {boolean}
  */
-var validateEmail = function (email) {
+var validateEmail = function(email) {
     if (email.length === 0) return false;
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i;
     return re.test(email);
@@ -25,7 +25,7 @@ var validateEmail = function (email) {
  * @param req-req.body.name, req.body.email, req.body.password or req.body.position.
  * @param res-400 error + message or 200 + token.
  */
-module.exports.register = function (req, res) {
+module.exports.register = function(req, res) {
 
     if (!req.body.name || !req.body.email || !req.body.password || !req.body.position) {
         sendJSONresponse(res, 400, {
@@ -99,7 +99,7 @@ module.exports.register = function (req, res) {
 
     User.findOne({
         name: req.body.name
-    }, function (err, name) {
+    }, function(err, name) {
         if (err) {
             sendJSONresponse(res, 400, {
                 "message": err
@@ -113,7 +113,7 @@ module.exports.register = function (req, res) {
         } else {
             User.findOne({
                 email: req.body.email
-            }, function (err, email) {
+            }, function(err, email) {
                 if (err) {
                     sendJSONresponse(res, 400, {
                         "message": err
@@ -132,7 +132,7 @@ module.exports.register = function (req, res) {
                     user.position = req.body.position;
                     user.setPassword(req.body.password);
 
-                    user.save(function (err) {
+                    user.save(function(err) {
                         var token;
                         token = user.generateJwt();
                         res.status(200);
@@ -151,7 +151,7 @@ module.exports.register = function (req, res) {
  * @param req-req.body.email and req.body.password
  * @param res-400 error + message or 200 + token and user's id.
  */
-module.exports.login = function (req, res) {
+module.exports.login = function(req, res) {
 
     if (!req.body.email || !req.body.password) {
         sendJSONresponse(res, 400, {
@@ -196,7 +196,7 @@ module.exports.login = function (req, res) {
     }
     //Authentication with passport.
 
-    passport.authenticate('local', function (err, user, info) {
+    passport.authenticate('local', function(err, user, info) {
         var token;
 
 

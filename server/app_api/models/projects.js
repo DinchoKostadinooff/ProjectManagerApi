@@ -33,7 +33,10 @@ var projectSchema = new mongoose.Schema({
     conversationId: {
         type: String
     },
-    createdAt: {type: Date, default: Date.now}
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
 
 });
 

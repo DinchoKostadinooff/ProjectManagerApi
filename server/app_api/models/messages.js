@@ -7,19 +7,18 @@ var mongoose = require('mongoose'),
  * author {Schema.Types.ObjectId}.
  */
 var MessageSchema = new Schema({
-        conversationId: {
-            type: Schema.Types.ObjectId
-        },
-        body: {
-            type: String
-        },
-        author: {
-            type: Schema.Types.ObjectId,
-            ref: 'User'
-        }
+    conversationId: {
+        type: Schema.Types.ObjectId
     },
-    {
-        timestamps: true
-    });
+    body: {
+        type: String
+    },
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }
+}, {
+    timestamps: true
+});
 //exports Message model
 module.exports = mongoose.model('Message', MessageSchema);

@@ -29,13 +29,13 @@
     <div class="panel-body scroll" id="scroll{{id}}">
         <ul ng-repeat="message in messages track by $index | toArray:true" id="messages">
             <li ng-show="isMe(message.author._id)" class="text-right">
-                <div class="content1" ng-class="{red:checkPositionMessage(message.body)}">{{message.body}}</div>
+                <div class="content1" ng-class="{red:checkPositionMessage(message.roleToSend)}">{{message.body}}</div>
                 <div class="clearfix"></div>
                 <small>{{displayAuthor(message.author._id)}} {{message.createdAt | date:'short' }}</small>
             </li>
             <li ng-show="!isMe(message.author._id)" class="text-left">
                 <span class="sender">{{displayAuthor(message.author._id)}}</span>
-                <div class="content" ng-class="{red:checkPositionMessage(message.body)}">
+                <div class="content" ng-class="{red:checkPositionMessage(message.roleToSend)}">
                     {{message.body}}
                 </div>
                 <small>{{message.createdAt | date:'short' }}</small>
@@ -59,9 +59,9 @@
         </div>
         <br>
         <div class="senders">
-          <a href="#" class="btn btn-primary btn-xs" ng-click="sendToRoleMessage('frontEnd')">To Frontend</a>
-          <a href="#" class="btn btn-primary btn-xs" ng-click="sendToRoleMessage('backEnd')">To Backend</a>
-          <a href="#" class="btn btn-primary btn-xs" ng-click="sendToRoleMessage('fullStack')">To Fullstack</a>
+          <a href="#" class="btn btn-primary btn-xs" ng-click="sendToRoleMessage('frontEnd')" ng-class="{btn_red:checkRoleToSend('Front-End')}">To Frontend</a>
+          <a href="#" class="btn btn-primary btn-xs" ng-click="sendToRoleMessage('backEnd')" ng-class="{btn_red:checkRoleToSend('Back-End')}">To Backend</a>
+          <a href="#" class="btn btn-primary btn-xs" ng-click="sendToRoleMessage('fullStack')" ng-class="{btn_red:checkRoleToSend('Full-stack')}">To Fullstack</a>
         </div>
     </div>
 

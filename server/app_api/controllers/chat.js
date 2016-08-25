@@ -45,7 +45,7 @@ exports.sendReply = function (req, res) {
  * @param res
 
  */
-exports.getConversation = function (req, res) {
+exports.getConversation = function(req, res) {
     if (!req.payload._id) {
         res.status(401).json({
             "message": "UnauthorizedError: private profile"
@@ -53,20 +53,26 @@ exports.getConversation = function (req, res) {
     } else {
         User
             .findById(req.payload._id)
-            .exec(function (err, user) {
+            .exec(function(err, user) {
 
-                Message.find({conversationId: req.params.conversationId})
+                Message.find({
+                        conversationId: req.params.conversationId
+                    })
                     .select('createdAt body author')
                     .sort('-createdAt')
                     .populate({
                         path: 'author',
                         select: 'profile.firstName profile.lastName'
                     })
-                    .exec(function (err, messages) {
+                    .exec(function(err, messages) {
                         if (err) {
-                            res.status(400).send({message: 'cannot be find'});
-                        }else{
-                            res.status(200).json({conversation: messages});
+                            res.status(400).send({
+                                message: 'cannot be find'
+                            });
+                        } else {
+                            res.status(200).json({
+                                conversation: messages
+                            });
                         }
 
 
@@ -76,13 +82,13 @@ exports.getConversation = function (req, res) {
     }
 
 
-}
+};
 /**
  * Returns all  participants by req.params.conversationId .
  * @param req
  * @param res
  */
-exports.getConversationParticipants = function (req, res) {
+exports.getConversationParticipants = function(req, res) {
     if (!req.payload._id) {
         res.status(401).json({
             "message": "UnauthorizedError: private profile"
@@ -90,25 +96,32 @@ exports.getConversationParticipants = function (req, res) {
     } else {
         User
             .findById(req.payload._id)
-            .exec(function (err, user) {
+            .exec(function(err, user) {
 
-                Conversation.findOne({_id: req.params.conversationId})
+                Conversation.findOne({
+                        _id: req.params.conversationId
+                    })
                     .select('participants')
-                    .exec(function (err, participants) {
+                    .exec(function(err, participants) {
                         if (err) {
-                            res.send({error: err});
+                            res.send({
+                                error: err
+                            });
 
                         }
 
 
                         var stack = [];
 
-                        console.log(participants.participants)
 
 
-                        User.find({_id: {$in: participants.participants}}, 'name position', function (err, name) {
-                            res.json(name)
-                        })
+                        User.find({
+                            _id: {
+                                $in: participants.participants
+                            }
+                        }, 'name position', function(err, name) {
+                            res.json(name);
+                        });
 
 
                     });
@@ -117,4 +130,4 @@ exports.getConversationParticipants = function (req, res) {
     }
 
 
-}
+};
