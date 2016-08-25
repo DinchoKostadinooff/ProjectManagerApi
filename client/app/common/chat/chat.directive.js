@@ -170,7 +170,7 @@
             /**
              * Shows if the user is the sender
              * @param {id} String Author ID
-             * @return Boolean true if the sender is the current user and false or nah
+             * @return Boolean true if the sender is the current user and false if nah
              */
             function isMe(id) {
                 if (identity.getId() === id) {
